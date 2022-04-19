@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func SendMessage(url string, message MessageFiles) error {
@@ -35,7 +36,8 @@ func SendMessage(url string, message MessageFiles) error {
 
 			var fw io.Writer
 			defer r.Close()
-			if fw, err = w.CreateFormFile(fmt.Sprintf("file%v", key), r.Name()); err != nil {
+
+			if fw, err = w.CreateFormFile(fmt.Sprintf("file%v", key), filepath.Base(r.Name())); err != nil {
 				return err
 			}
 			if _, err = io.Copy(fw, r); err != nil {
